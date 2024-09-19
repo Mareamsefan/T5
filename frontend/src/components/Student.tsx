@@ -1,11 +1,16 @@
+import Avatar from "./Avatar";
 
-type StudentProps = {
+export type StudentProps = {
     id: string, 
     name: string
 }
-const Student =(props: StudentProps) => {
+export default function Student(props: StudentProps){
     const {id, name} = props; 
-    return <h1>{name}</h1>
+    return (
+        <div>
+        <p className="student-name">{name}</p>
+        <Avatar name={name} />
+        </div>
+    ); 
 } 
 
-export default Student; 
