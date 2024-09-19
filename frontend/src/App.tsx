@@ -1,9 +1,9 @@
-import Student from "./components/Student";
+import Grid from "./components/Grid";
 
 function App() {
   return (
     <>
-  <Student name="ola" id="1"/> 
+  <Grid  />
   </>
   ); 
 }
