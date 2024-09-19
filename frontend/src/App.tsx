@@ -1,10 +1,23 @@
-import Student from "./components/Student";
+import Grid from "./components/Grid";
+import { Student as StudentProps } from "./components/types";
+
+const studentList:StudentProps[] = [ 
+  {id: '1', 
+   name: 'Dummy1'
+  }, 
+  {id: '2', 
+   name: 'Dummy2'
+  },   
+  {id: '3', 
+   name: 'Dummy3'
+  } 
+]; 
 
 function App() {
+
   return (
     <>
-  <h1>Start</h1>
-  <Student name="ola" id="1"/> 
+  <Grid studentList={studentList} />
   </>
   ); 
 }
