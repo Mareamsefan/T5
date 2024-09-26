@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Grid from "./components/Grid";
 import Total from "./components/Total";
-import { Student as StudentProps } from "./components/types";
+import { Student, Student as StudentProps } from "./components/types";
 
 
 
@@ -18,13 +18,16 @@ function App() {
     } 
   ]; 
   const [studentList, setStudentList] = useState<StudentProps[]>( student?? []);
-  const onAddStudent =  (student: {name:string}) => {
+  const onAddStudent =  (student: Omit<Student, "id">) => {
     setStudentList((prev) => [...prev, {id: crypto.randomUUID(), ...student}]); 
    }; 
-    
+  
+   const onRemoveStudent=(id:string) => {
+      setStudentList((prev) => prev.filter((student) => student.id !== id)); 
+   }
   return (
     <>
-  <Grid studentList={studentList}  onAddStudent = {onAddStudent}/>
+  <Grid studentList={studentList}  onAddStudent = {onAddStudent} onRemoveStudent={onRemoveStudent}/>
   <Total total={studentList.length} />
   </>
   ); 
