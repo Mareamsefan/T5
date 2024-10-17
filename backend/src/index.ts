@@ -2,12 +2,11 @@ import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors';
 
-const studentList = [
-  {Maream: '20 år...'}, 
-  {Dummy: '22 år...'}, 
-  {Dummy: '26 år...'}
 
-]; 
+const studentList = [
+  { id: "1", name: "Ola Normann" },
+  { id: "2", name: "Kari Normann" },
+];
 
 const app = new Hono()
 

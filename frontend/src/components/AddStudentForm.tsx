@@ -3,7 +3,7 @@ import { useState } from "react";
 type AddStudentFormProps = {
     onAddStudent: ({name}: {name: string}) => void; 
 }
-export default function AppStudentForm(props: AddStudentFormProps) { 
+export default function AddStudentForm(props: AddStudentFormProps) { 
    const {onAddStudent} = props; 
    const [name, setName] = useState(""); 
 

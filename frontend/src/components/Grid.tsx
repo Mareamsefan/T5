@@ -1,17 +1,17 @@
 import { Student as StudentProps } from "./types";
 import Student from "./Student";
-import AppStudentForm from "./AppStudentForm";
+import {PropsWithChildren} from "react";
 
 
 type GridProps = {
     studentList: StudentProps[], 
-    onAddStudent: ({name}: {name: string}) => void; 
+   // onAddStudent: ({name}: {name: string}) => void; 
     onRemoveStudent: (id:string) => void;
 }
 
-export default function Grid(props:GridProps) {
+export default function Grid(props:PropsWithChildren<GridProps>) {
   
-    const {studentList, onAddStudent, onRemoveStudent} = props
+    const {studentList, onRemoveStudent, children} = props
     /*
     const onAddStudent = (student:StudentProps, studentList:StudentProps[]) => {
         const studentListCopy = studentList; 
@@ -22,7 +22,9 @@ export default function Grid(props:GridProps) {
     return ( 
     <section className="grid">
         {studentList.map(student => <Student key={student.id} id={student.id} name={student.name} onRemoveStudent={onRemoveStudent} /> )}
-        <AppStudentForm onAddStudent={onAddStudent}/> 
+        {children}
     </section>
     ); 
+      /* 
+       <AppStudentForm onAddStudent={onAddStudent}/> */
 }

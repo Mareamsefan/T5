@@ -1,36 +1,98 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Grid from "./components/Grid";
 import Total from "./components/Total";
-import { Student, Student as StudentProps } from "./components/types";
+import type { Student  as StudentProps} from "./components/types"; 
+import AddStudentForm from "./components/AddStudentForm";
+import Filter from "./components/Filter";
+import Student from "./components/Student";
 
-
+const intitalStudent = [
+  { id: "1", name: "Ola Normann" },
+  { id: "2", name: "Kari Normann" },
+];
 
 function App() {
-  const student:StudentProps[] = [ 
-    {id: '1', 
-     name: 'Dummy1'
-    }, 
-    {id: '2', 
-     name: 'Dummy2'
-    },   
-    {id: '3', 
-     name: 'Dummy3'
-    } 
-  ]; 
-  const [studentList, setStudentList] = useState<StudentProps[]>( student?? []);
-  const onAddStudent =  (student: Omit<Student, "id">) => {
-    setStudentList((prev) => [...prev, {id: crypto.randomUUID(), ...student}]); 
-   }; 
-  
-   const onRemoveStudent=(id:string) => {
-      setStudentList((prev) => prev.filter((student) => student.id !== id)); 
-   }
+  const [filter, setFilter] = useState("-");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const [students, setStudents] = useState<StudentProps[]>(intitalStudent ?? []);
+
+  const filteredStudents = students.filter((student) =>
+    filter !== "-" ? student.name.toLowerCase().includes(filter) : true
+  );
+
+  // const options = Array.from(
+  //   new Set(
+  //     students.map((student) => student.name.trim().split(" ")[0].toLowerCase())
+  //   )
+  // );
+
+  useEffect(() => {
+    // Her skjer det noe
+    const fetchStudents = async () => {
+      try {
+        setLoading(true);
+        // TODO: No hardcoded url. Move to config in config/index.ts
+        const response = await fetch("http://localhost:3999/api/students");
+        const data = await response.json();
+        setStudents(data);
+      } catch (error) {
+        console.error(error);
+        setError("Feilet ved henting av studenter");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStudents();
+  }, []);
+
+  const options = Array.from(
+    students
+      .reduce((acc, student: StudentProps) => {
+        const name = student.name.trim().split(" ")[0];
+        if (acc.has(name)) return acc;
+
+        return acc.set(name, {
+          ...student,
+          value: name.toLowerCase(),
+          label: name,
+        });
+      }, new Map())
+      .values()
+  );
+
+  const onFilterChange = (filter: string) => {
+    setFilter(filter);
+  };
+
+  const onAddStudent = (student: Omit<StudentProps, "id">) => {
+    setStudents((prev) => [...prev, { id: crypto.randomUUID(), ...student }]);
+  };
+
+  const onRemoveStudent = (id: string) => {
+    setStudents((prev) => prev.filter((student) => student.id !== id));
+  };
+
+  // [[key, {}], [key, {}]]
   return (
-    <>
-  <Grid studentList={studentList}  onAddStudent = {onAddStudent} onRemoveStudent={onRemoveStudent}/>
-  <Total total={studentList.length} />
-  </>
-  ); 
+    <main>
+      {/* <Student name="Marius" id="123" /> */}
+      <Filter
+        filter={filter}
+        onFilterChange={onFilterChange}
+        options={Object.values(options)}
+      />
+      <Grid
+        studentList={filteredStudents}
+        // onAddStudent={onAddStudent}
+        onRemoveStudent={onRemoveStudent}
+      >
+        <AddStudentForm onAddStudent={onAddStudent} />
+      </Grid>
+      <Total total={students.length} />
+    </main>
+  );
 }
 
-export default App
+export default App;
